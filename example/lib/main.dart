@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({required this.title});
   final String title;
 
   @override
@@ -34,7 +34,7 @@ class _MyHomePageState extends State<MyHomePage> {
   // is true will show the numeric keyboard.
   bool isNumericMode = false;
 
-  TextEditingController _controllerText;
+  TextEditingController? _controllerText;
 
   @override
   void initState() {
@@ -57,7 +57,7 @@ class _MyHomePageState extends State<MyHomePage> {
               style: Theme.of(context).textTheme.bodyText1,
             ),
             Text(
-              _controllerText.text,
+              _controllerText!.text,
               style: TextStyle(color: Colors.red),
             ),
             SwitchListTile(
@@ -75,7 +75,11 @@ class _MyHomePageState extends State<MyHomePage> {
               },
             ),
             Expanded(
-              child: Container(),
+              child: Container(
+                child: TextField(
+                  controller: _controllerText,
+                ),
+              ),
             ),
             Container(
               color: Colors.deepPurple,
@@ -104,7 +108,8 @@ class _MyHomePageState extends State<MyHomePage> {
   /// Fired when the virtual keyboard key is pressed.
   _onKeyPress(VirtualKeyboardKey key) {
     if (key.keyType == VirtualKeyboardKeyType.String) {
-      text = text + (shiftEnabled ? key.capsText : key.text);
+      text =
+          text + (shiftEnabled ? key.capsText.toString() : key.text.toString());
     } else if (key.keyType == VirtualKeyboardKeyType.Action) {
       switch (key.action) {
         case VirtualKeyboardKeyAction.Backspace:
@@ -115,7 +120,7 @@ class _MyHomePageState extends State<MyHomePage> {
           text = text + '\n';
           break;
         case VirtualKeyboardKeyAction.Space:
-          text = text + key.text;
+          text = text + key.text.toString();
           break;
         case VirtualKeyboardKeyAction.Shift:
           shiftEnabled = !shiftEnabled;
